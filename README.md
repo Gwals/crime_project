@@ -20,6 +20,31 @@ This project focus on answering the following questions:
 - How many years does it took for victims to report their cases
 
 ## Data Analysis
+- area that has the largest frequency of night crimes (crimes committed between 10pm and 3:59am)
+```python
+crimes['TIME OCC']= crimes['TIME OCC'].astype(int)
+peak_night_crime=crimes[(crimes['TIME OCC']>=2200) | (crimes['TIME OCC']<=359)]
+peak_night_crime_location_count= peak_night_crime['AREA NAME'].value_counts()
+peak_night_crime_location=peak_night_crime_location_count.index[0]
+print(peak_night_crime_location)
+```
+- hour that has the highest frequency of crimes
+```python
+crimes = pd.read_csv("crimes.csv", parse_dates=["Date Rptd", "DATE OCC"], dtype={"TIME OCC": str})
+crimes['TIME OCC_hr']= crimes['TIME OCC'].str[:2].astype(int)
+crime_hour_count=crimes['TIME OCC_hr'].value_counts()
+peak_crime_hour=crime_hour_count.index[0]
+print(peak_crime_hour)
+```
+- Identifying the number of crimes committed against victims of different age groups
+```python
+victim_ages=["0-17", "18-25", "26-34", "35-44", "45-54", "55-64", "65+"]
+age_bins=[0, 17, 25, 34, 44, 54, 64, float('inf')]
+crimes['victim_age_group']=pd.cut(crimes['Vict Age'], labels=victim_ages,  bins=age_bins, right=True)
+victim_ages_count= crimes['victim_age_group'].value_counts().reindex(victim_ages, fill_value=0)
+victim_ages = pd.Series(victim_ages_count, name='Victim Age Counts')
+print(victim_ages)
+```
 
 ## Results/ findings
 
